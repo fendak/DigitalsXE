@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Файли TLC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    ul {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    li {
+      margin: 8px 0;
+    }
+    .counter {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Список доступних TLC-файлів</h1>
+  <ul id="fileList">
+    <!-- Сюди будуть вставлені посилання на файли -->
+  </ul>
+  <div class="counter" id="fileCount"></div>
+
+  <script>
+    const repo = "mykola-fendak/tlc-files"; // змінити на ваш
+    const folder = "files"; // назва каталогу у репозиторії
+
+    fetch(`https://api.github.com/repos/${repo}/contents/${folder}`)
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById('fileList');
+        const countDiv = document.getElementById('fileCount');
+
+        let count = 0;
+
+        data.forEach(file => {
+          if (file.name.endsWith('.tlc')) {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = file.download_url;
+            link.textContent = file.name;
+            link.target = "_blank";
+            li.appendChild(link);
+            list.appendChild(li);
+            count++;
+          }
+        });
+
+        countDiv.textContent = `Кількість файлів: ${count}`;
+      })
+      .catch(error => {
+        console.error('Помилка завантаження списку файлів:', error);
+      });
+  </script>
+</body>
+</html>
